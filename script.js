@@ -27,7 +27,6 @@ const gameBoard = (() => {
         let cell = board[row][col];
 
         if (cell === '') {
-            console.log(cell);
             board[row][col] = value; //the cell's value is updated to either 'X' or 'O'
 
 
@@ -37,12 +36,22 @@ const gameBoard = (() => {
         printBoard(); //print after playing cell
         return true; //successful move was reached
     } 
+
+    //reset board to empty
+    function reset () {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                board[i][j] = ''
+            } 
+        }
+    }
     
     printBoard(); // print at start of game
     return {
         printBoard,
         getBoard,
         playCell,
+        reset,
     }    
 })()
 
@@ -56,13 +65,23 @@ const gameController = (function() {
         if (!move) {
             console.log("Space is occupied. Choose a different space.");
         } else {
-            checkForWins();
-            cpuTurn();
+            let winner = checkForWins();
+
+            console.log("Winner:", winner);
+
+
+            // proceed to cpu's turn only if there is no winner
+            if (!winner) {
+                console.log("calling cputurn.")
+                cpuTurn();
+            } else {
+                console.log ("no cpu turn.")
+            }
         }
         return move;
     }
 
-    // generate a random move, repeat until a valid move is reached. 
+    // generate a random move, repeating until a valid move is reached. 
     function cpuTurn() {
         console.log("cpu's turn");
 
@@ -76,7 +95,6 @@ const gameController = (function() {
 
             // successful move was made
             if (move) {
-                checkForWins();
                 return move;
             }
         }
@@ -84,6 +102,8 @@ const gameController = (function() {
 
     // check all possible wins and draws, ending game if needed.
     function checkForWins () {
+
+        let winner = false;
 
         //check columns
         for (let i = 0; i < 3; i++) {
@@ -94,10 +114,9 @@ const gameController = (function() {
                 ) {
                     console.log(`col ${i} win`)
                     win(board[0][1]);
-                    return board[0][i]; //the winning player
                 }
 
-        // check rows
+            // check rows
             else if (
                 board[i][0] !== '' &&
                 board[i][0] === board[i][1] &&
@@ -105,7 +124,6 @@ const gameController = (function() {
                 ) {
                     console.log (`row ${i} win`)
                     win(board[i][0]);
-                    return board[i][0]; //the winning player
                 }
         }
 
@@ -115,19 +133,28 @@ const gameController = (function() {
             board[0][0] === board [1][1] &&
             board[1][1] === board [2][2] ||
             board[0][2] === board [1][1] &&
-            board[1][1] === board [2] )
+            board[1][1] === board [2][0] )
         ) {
             console.log("diagonal win")
             win(board[1][1]);
-            return board[1][1]; //the winning player
         }
+
+        // announce a winner and reset the game board.
+        function win (player) {
+            winner = true;
+            console.log(`${player} WINS!`);
+            gameBoard.reset();
+        }
+        return winner;
     }
 
-    function win(player) {
-        console.log("game over...")
-    }
+  
 
-    return {playerMove};
+
+    return {
+        playerMove,
+        checkForWins,
+    };
 })()
 
 
