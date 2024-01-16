@@ -153,6 +153,7 @@ const gameController = (function() {
                 console.log(player + " WINS!")
             }
             gameBoard.reset();
+            gameBoard.printBoard();
         }
         return winner; //true only if winner is decided
     }
@@ -163,5 +164,22 @@ const gameController = (function() {
     };
 })()
 
+//generate the DOM gameboard, include click listeners, and update its contents during gameplay
+const displayController = (function () {
+    const boardData = gameBoard.getBoard();
+    const board = document.getElementById('board');
 
+    //generate the board in DOM
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            cell = document.createElement('div');
+            cell.classList = "cell";
+            cell.id = `row ${i}, col ${j}`;
+            cell.textContent = `row ${i}, col ${j}`;
+            
+            board.appendChild(cell);
+        }
+    }
+
+})()
 

@@ -1,3 +1,31 @@
-* {
+/* * {
     border: 1px solid red;
+} */
+
+#main {
+    display: flex;
+    flex-direction: column;
+    margin: 5vw;
+    
+    align-items: center;
+}
+
+#start {
+    padding: 1em;
+    margin: 2em;
+    width: 50vw;
+}
+
+#board {
+    background-color: black;
+
+    display: grid;
+    grid-template-rows: 100px 100px 100px;
+    grid-template-columns: 100px 100px 100px;
+    gap: 2px;
+}
+
+.cell {
+    background-color: white;
+
 }
