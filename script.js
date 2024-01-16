@@ -89,9 +89,10 @@ const gameController = (function() {
 
             // successful move was made
             if (move) {
-                return move;
+                break;
             }
         }
+        checkForWins();
     }
 
     // check all possible wins and draws, ending game if needed.
@@ -107,7 +108,7 @@ const gameController = (function() {
                 board[1][i] === board[2][i] 
                 ) {
                     console.log(`col ${i} win`)
-                    win(board[0][1]);
+                    win(board[0][i]);
                 }
 
             // check rows
@@ -133,10 +134,24 @@ const gameController = (function() {
             win(board[1][1]);
         }
 
+        //check draw
+        if (
+            !(board[0].includes('')) &&
+            !(board[1].includes('')) &&
+            !(board[2].includes(''))
+        ) {
+            win('draw');
+        }
+
         // announce a winner and reset the game board.
         function win (player) {
             winner = true;
-            console.log(`${player} WINS!`);
+            // handle a draw game
+            if (player === 'draw') {
+                console.log('DRAW!')
+            } else {
+                console.log(player + " WINS!")
+            }
             gameBoard.reset();
         }
         return winner; //true only if winner is decided
