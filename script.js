@@ -67,15 +67,9 @@ const gameController = (function() {
         } else {
             let winner = checkForWins();
 
-            console.log("Winner:", winner);
-
-
             // proceed to cpu's turn only if there is no winner
             if (!winner) {
-                console.log("calling cputurn.")
                 cpuTurn();
-            } else {
-                console.log ("no cpu turn.")
             }
         }
         return move;
@@ -145,11 +139,8 @@ const gameController = (function() {
             console.log(`${player} WINS!`);
             gameBoard.reset();
         }
-        return winner;
+        return winner; //true only if winner is decided
     }
-
-  
-
 
     return {
         playerMove,
