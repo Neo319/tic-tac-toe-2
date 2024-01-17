@@ -17,7 +17,6 @@
 }
 
 #board {
-    background-color: black;
 
     display: grid;
     grid-template-rows: 25vw 25vw 25vw;
@@ -33,7 +32,7 @@
     align-items: center;
     justify-content: center;
 
-    font-size: 10rem;
+    font-size: 20vw;
 
 }
 
@@ -43,5 +42,9 @@
     #board {
         grid-template-rows: 25vh 25vh 25vh;
         grid-template-columns: 25vh 25vh 25vh;
+    }
+
+    .cell {
+        font-size: 20vh;
     }
 }

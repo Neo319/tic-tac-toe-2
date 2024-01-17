@@ -156,6 +156,9 @@ const gameController = (function() {
             }
             gameBoard.reset();
             gameBoard.printBoard();
+
+            // prevent click from starting a new game until reset button is clicked
+            displayController.removeClickListeners();
         }
         return winner; //true only if winner is decided
     }
@@ -166,21 +169,33 @@ const gameController = (function() {
     };
 })()
 
-//generate the DOM gameboard, include click listeners, and update its contents during gameplay
+//3. generate the DOM gameboard, include click listeners, and update its contents during gameplay
 const displayController = (function () {
     const boardData = gameBoard.getBoard();
-    const board = document.getElementById('board');
+    const board = document.createElement('div');
+    document.getElementById('main').appendChild(board);
+    board.id = 'board'
+
+    //boolean tracking whether a board has been generated to ensure there are not repeats 
+    let boardIsGenerated = false;
 
     //generate the board in DOM
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            cell = document.createElement('div');
-            cell.classList = "cell";
-            cell.id = `row ${i}, col ${j}`;
-
-            board.appendChild(cell);
-        }
+    function generateBoard () {
+        if (boardIsGenerated === false) {
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    cell = document.createElement('div');
+                    cell.classList = "cell";
+                    cell.id = `row ${i}, col ${j}`;
+        
+                    board.appendChild(cell);
+                }
+            }
+            boardIsGenerated = true;
+        } 
+        
     }
+    
 
     // update the board to reflect the board data
     function boardDisplay () {
@@ -192,25 +207,64 @@ const displayController = (function () {
         }
     }
 
+    //the function used to play cells when they are clicked 
+    function cellClick (i, j){
+        gameController.playerMove(i, j)
+    }
+
     // add click listeners to board cells to play the cell
     function addClickListeners () {
         console.log("START");
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let cell = document.getElementById(`row ${i}, col ${j}`);
-                cell.addEventListener('click', () => gameController.playerMove(i, j))
+                cell.addEventListener('click', () => cellClick(i, j))
             }
         }
     }
 
-    //start button will call the previous function
+    //start button will generate the board and add click listeners
     const startBtn = document.querySelector('button');
-    startBtn.addEventListener('click', addClickListeners);
+    startBtn.addEventListener('click', function PressStart() {
+
+
+        generateBoard();
+        addClickListeners();
+
+        //'board' div background becomes black to create the game grid
+        document.getElementById('board').style.backgroundColor = 'black';
+
+        //'start' button becomes a 'reset' button 
+        startBtn.textContent = 'RESET';
+        startBtn.removeEventListener('click', () => PressStart)
+
+        startBtn.addEventListener('click', () => {
+            removeClickListeners();
+            gameBoard.reset();
+            boardDisplay();
+            addClickListeners();
+        })
+        
+
+    });
+
+    //remove event listeners after game is won
+    function removeClickListeners () {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                let cell = document.getElementById(`row ${i}, col ${j}`);
+                cell.removeEventListener('click', cellClick);
+            }
+        }
+    }
 
     return {
         boardDisplay,
         addClickListeners,
+        removeClickListeners,
     }
 
 })()
+
+//4. notify the player about the game state using a text element
 
