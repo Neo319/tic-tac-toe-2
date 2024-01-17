@@ -151,8 +151,10 @@ const gameController = (function() {
             // handle a draw game
             if (player === 'draw') {
                 console.log('DRAW!')
+                displayController.notify('DRAW! Try again?')
             } else {
                 console.log(player + " WINS!")
+                displayController.notify(player + " WINS! Try again?")
             }
             gameBoard.reset();
             gameBoard.printBoard();
@@ -261,6 +263,7 @@ const displayController = (function () {
             gameBoard.reset();
             boardDisplay();
             gameIsOver = false;
+            notify('');
             
         })
     };
@@ -270,13 +273,24 @@ const displayController = (function () {
         gameIsOver = true;
     }
 
+    // notify the player about the game state using a text element
+    const notifier = document.createElement('h3');
+    const main = document.getElementById('main');
+    main.appendChild(notifier);
+
+    function notify (message) {
+        notifier.textContent = message
+    }
+
     return {
         boardDisplay,
         addClickListeners,
         endGame,
+        notify,
     }
 
 })()
 
-//4. notify the player about the game state using a text element
+
+
 
