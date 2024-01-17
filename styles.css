@@ -20,12 +20,28 @@
     background-color: black;
 
     display: grid;
-    grid-template-rows: 100px 100px 100px;
-    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 25vw 25vw 25vw;
+    grid-template-columns: 25vw 25vw 25vw;
     gap: 2px;
 }
 
 .cell {
     background-color: white;
+    display: flex;
 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10rem;
+
+}
+
+
+@media only screen and (min-width: 700px) {
+
+    #board {
+        grid-template-rows: 25vh 25vh 25vh;
+        grid-template-columns: 25vh 25vh 25vh;
+    }
 }

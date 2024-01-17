@@ -34,6 +34,8 @@ const gameBoard = (() => {
             return false; //the cell is occupied
         }
         printBoard(); //print after playing cell
+        displayController.boardDisplay(); // update DOM 
+
         return true; //successful move was reached
     } 
 
@@ -175,10 +177,39 @@ const displayController = (function () {
             cell = document.createElement('div');
             cell.classList = "cell";
             cell.id = `row ${i}, col ${j}`;
-            cell.textContent = `row ${i}, col ${j}`;
-            
+
             board.appendChild(cell);
         }
+    }
+
+    // update the board to reflect the board data
+    function boardDisplay () {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                let cell = document.getElementById(`row ${i}, col ${j}`);
+                cell.textContent = boardData[i][j];
+            }
+        }
+    }
+
+    // add click listeners to board cells to play the cell
+    function addClickListeners () {
+        console.log("START");
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                let cell = document.getElementById(`row ${i}, col ${j}`);
+                cell.addEventListener('click', () => gameController.playerMove(i, j))
+            }
+        }
+    }
+
+    //start button will call the previous function
+    const startBtn = document.querySelector('button');
+    startBtn.addEventListener('click', addClickListeners);
+
+    return {
+        boardDisplay,
+        addClickListeners,
     }
 
 })()
