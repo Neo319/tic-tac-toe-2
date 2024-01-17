@@ -158,7 +158,7 @@ const gameController = (function() {
             gameBoard.printBoard();
 
             // prevent click from starting a new game until reset button is clicked
-            displayController.removeClickListeners();
+            displayController.endGame();
         }
         return winner; //true only if winner is decided
     }
@@ -178,6 +178,8 @@ const displayController = (function () {
 
     //boolean tracking whether a board has been generated to ensure there are not repeats 
     let boardIsGenerated = false;
+    //boolean to check before move is made
+    let gameIsOver = false;
 
     //generate the board in DOM
     function generateBoard () {
@@ -209,18 +211,29 @@ const displayController = (function () {
 
     //the function used to play cells when they are clicked 
     function cellClick (i, j){
-        console.log('clicking ' + i + ' , ' + j);
-        gameController.playerMove(i, j)
+        if (!gameIsOver) {
+            console.log('clicking ' + i + ' , ' + j);
+            gameController.playerMove(i, j)
+        } else {
+            console.log ('cannot move when game is over.')
+        }
     }
 
         
     // add click listeners to board cells to play the cell
     function addClickListeners () {
         console.log("adding listeners");
+
+        // define a reusable click handler function, which can later be removed
+        function cellClickHandler (i, j) {
+            return () => cellClick (i, j);
+        }
+
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let cell = document.getElementById(`row ${i}, col ${j}`);
-                cell.addEventListener('click', () => cellClick(i, j))
+                let clickHandler = cellClickHandler(i, j);
+                cell.addEventListener('click', () => clickHandler(i, j))
             }
         }
     }
@@ -247,26 +260,20 @@ const displayController = (function () {
             
             gameBoard.reset();
             boardDisplay();
+            gameIsOver = false;
             
         })
     };
-        
-
-    //remove event listeners after game is won
-    function removeClickListeners () {
-        console.log('removing listeners')
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                let cell = document.getElementById(`row ${i}, col ${j}`);
-                cell.removeEventListener('click', cellClick);
-            }
-        }
+            
+    function endGame () {
+        console.log('ending game');
+        gameIsOver = true;
     }
 
     return {
         boardDisplay,
         addClickListeners,
-        removeClickListeners,
+        endGame,
     }
 
 })()
