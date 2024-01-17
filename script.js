@@ -209,12 +209,14 @@ const displayController = (function () {
 
     //the function used to play cells when they are clicked 
     function cellClick (i, j){
+        console.log('clicking ' + i + ' , ' + j);
         gameController.playerMove(i, j)
     }
 
+        
     // add click listeners to board cells to play the cell
     function addClickListeners () {
-        console.log("START");
+        console.log("adding listeners");
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let cell = document.getElementById(`row ${i}, col ${j}`);
@@ -225,8 +227,10 @@ const displayController = (function () {
 
     //start button will generate the board and add click listeners
     const startBtn = document.querySelector('button');
-    startBtn.addEventListener('click', function PressStart() {
+    startBtn.addEventListener('click', pressStart);
 
+    function pressStart() {
+        console.log('pressing start');
 
         generateBoard();
         addClickListeners();
@@ -236,20 +240,21 @@ const displayController = (function () {
 
         //'start' button becomes a 'reset' button 
         startBtn.textContent = 'RESET';
-        startBtn.removeEventListener('click', () => PressStart)
+        startBtn.removeEventListener('click', pressStart)
 
         startBtn.addEventListener('click', () => {
-            removeClickListeners();
+            console.log('pressing reset');
+            
             gameBoard.reset();
             boardDisplay();
-            addClickListeners();
+            
         })
+    };
         
-
-    });
 
     //remove event listeners after game is won
     function removeClickListeners () {
+        console.log('removing listeners')
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let cell = document.getElementById(`row ${i}, col ${j}`);
